@@ -1,10 +1,19 @@
 import Vector3 from "../vector/vector3.ts";
 import Vector4 from "../vector/vector4.ts";
 
+/**
+ * A 4x4 matrix.
+ * 
+ * The values are stored in row major inside a Float32Array
+ */
 export default class Matrix4 extends Float32Array{
     constructor(){
         super(16);
     }
+
+    /**
+     * Turns this matrix into an identity matrix
+     */
     setIdentity(){        
         this[0] =  1; this[1] =  0; this[2] =  0; this[3] =  0;
         this[4] =  0; this[5] =  1; this[6] =  0; this[7] =  0;
@@ -12,6 +21,10 @@ export default class Matrix4 extends Float32Array{
         this[12] = 0; this[13] = 0; this[14] = 0; this[15] = 1;
     }
 
+    /**
+     * Turns this matrix into a translation matrix
+     * @param {Vector3} translation the translation to use
+     */
     fromTranslation(translation: Vector3){
         this[0] =  1; this[1] =  0; this[2] =  0; this[3] =  translation.x;
         this[4] =  0; this[5] =  1; this[6] =  0; this[7] =  translation.y;
@@ -19,6 +32,10 @@ export default class Matrix4 extends Float32Array{
         this[12] = 0; this[13] = 0; this[14] = 0; this[15] = 1;
     }
 
+    /**
+     * Turns this matrix into a rotation matrix around the X axis
+     * @param angle the angle of the rotation
+     */
     fromRotationX(angle: number){
         const s = Math.sin(angle);
         const c = Math.cos(angle);
@@ -28,6 +45,10 @@ export default class Matrix4 extends Float32Array{
         this[12] = 0; this[13] = 0; this[14] = 0; this[15] = 1;
     }
 
+    /**
+     * Turns this matrix into a rotation matrix around the Y axis
+     * @param angle the angle of the rotation
+     */
     fromRotationY(angle: number){
         const s = Math.sin(angle);
         const c = Math.cos(angle);
@@ -37,6 +58,10 @@ export default class Matrix4 extends Float32Array{
         this[12] = 0; this[13] = 0; this[14] = 0; this[15] = 1;
     }
 
+    /**
+     * Turns this matrix into a rotation matrix around the Z axis
+     * @param angle the angle of the rotation
+     */
     fromRotationZ(angle: number){
         const s = Math.sin(angle);
         const c = Math.cos(angle);
@@ -46,6 +71,10 @@ export default class Matrix4 extends Float32Array{
         this[12] = 0; this[13] = 0; this[14] = 0; this[15] = 1;
     }
 
+    /**
+     * Turns this matrix into a scaling matrix
+     * @param scale the scaling vector to use
+     */
     fromScale(scale: Vector3){
         this[0] =  scale.x; this[1] =        0; this[2] =        0; this[3] =  0;
         this[4] =        0; this[5] =  scale.y; this[6] =        0; this[7] =  0;
@@ -53,6 +82,14 @@ export default class Matrix4 extends Float32Array{
         this[12] =       0; this[13] =       0; this[14] =       0; this[15] = 1;
     }
 
+    /**
+     * Returns the value at the specified position.
+     * 
+     * If the position is outside the matrix bounds, an error is thrown
+     * @param col the index of the column, zero based
+     * @param row the index of the row, zero based
+     * @returns the value at the specified position
+     */
     getValue(col: number, row: number){
         if (row < 0 || row >= 4 || col < 0 || col >= 4){
             throw new Error(`position out of bounds [${col},${row}]`)
@@ -60,6 +97,14 @@ export default class Matrix4 extends Float32Array{
         return this[col * 4 + row];
     }
     
+    /**
+     * Assigns a value to the specified position
+     * 
+     * If the position is outside the matrix bounds, an error is thrown
+     * @param col the index of the column, zero based
+     * @param row the index of the row, zero based
+     * @param value the value to assign to the position
+     */
     setValue(col: number, row: number, value: number){
         if (row < 0 || row >= 4 || col < 0 || col >= 4){
             throw new Error(`position out of bounds [${col},${row}]`)
@@ -67,6 +112,14 @@ export default class Matrix4 extends Float32Array{
         this[col * 4 + row] = value;
     }
 
+    /**
+     * multiplies `this` and `rhs`, and stores the result in `out`
+     * 
+     * `out` can be the same as `this` and/or `rhs` without affecting the result
+     * @param out the matrix to store the result in
+     * @param rhs the right hand side matrix
+     * @returns the matrix specified in `out`
+     */
     multiply(out: Matrix4, rhs: Matrix4){
         const a00 = this[0],  a01 = this[1],  a02 = this[2],  a03 = this[3],
               a10 = this[4],  a11 = this[5],  a12 = this[6],  a13 = this[7],
@@ -98,6 +151,14 @@ export default class Matrix4 extends Float32Array{
         return out;
     }
 
+    /**
+     * Transforms the vector specified in `rhs`, and stores the result in `out`,
+     * 
+     * `out` and `rhs` can be the same vector without affecting the result
+     * @param out the output vector
+     * @param rhs the input vector
+     * @returns the vector specified in out
+     */
     transformVec4(out: Vector4, rhs: Vector4){
         const a00 = this[0],  a01 = this[1],  a02 = this[2],  a03 = this[3],
               a10 = this[4],  a11 = this[5],  a12 = this[6],  a13 = this[7],
@@ -112,5 +173,6 @@ export default class Matrix4 extends Float32Array{
         const w_ = x*a30 + y*a31 + z*a32 + w*a33;
 
         out.setValues(x_, y_, z_, w_);
+        return out;
     }
 }

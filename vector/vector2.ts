@@ -1,9 +1,31 @@
+/**
+ * A 2d vector
+ */
 export default class Vector2 extends Float32Array{
 
+    /**
+     * A helper vector with all elements sero
+     */
     static ZERO = new Vector2(0,0);
+    
+    /**
+     * The vector (1, 0)
+     */
     static POSX = new Vector2(1,0);
+
+    /**
+     * the vector (-1, 0)
+     */
     static NEGX = new Vector2(-1,0);
+    
+    /**
+     * the vector (0, 1)
+     */
     static POSY = new Vector2(0,1);
+
+    /**
+     * the vector (0, -1)
+     */
     static NEGY = new Vector2(0,-1);
 
     constructor(x = 0, y = 0){
