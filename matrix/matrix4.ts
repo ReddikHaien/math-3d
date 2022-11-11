@@ -53,6 +53,20 @@ export default class Matrix4 extends Float32Array{
         this[12] =       0; this[13] =       0; this[14] =       0; this[15] = 1;
     }
 
+    getValue(col: number, row: number){
+        if (row < 0 || row >= 4 || col < 0 || col >= 4){
+            throw new Error(`position out of bounds [${col},${row}]`)
+        }
+        return this[col * 4 + row];
+    }
+    
+    setValue(col: number, row: number, value: number){
+        if (row < 0 || row >= 4 || col < 0 || col >= 4){
+            throw new Error(`position out of bounds [${col},${row}]`)
+        }
+        this[col * 4 + row] = value;
+    }
+
     multiply(out: Matrix4, rhs: Matrix4){
         const a00 = this[0],  a01 = this[1],  a02 = this[2],  a03 = this[3],
               a10 = this[4],  a11 = this[5],  a12 = this[6],  a13 = this[7],
