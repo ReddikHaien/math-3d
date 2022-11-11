@@ -61,3 +61,44 @@ Deno.test("matrix translation", () => {
     checkMatrix(matrix,expectedMatrix);
 });
 
+Deno.test("matrix rotation X", () => {
+    //ARRANGE
+    const angle = Math.PI/67.1247;
+    const sin = Math.sin(angle);
+    const cos = Math.cos(angle);
+    const expected = new Float32Array([
+        1,0,0,0,
+        0,cos,-sin,0,
+        0,sin,cos,0,
+        0,0,0,1
+    ]);
+
+    const matrix = new Matrix4();
+
+    //ACT
+    matrix.fromRotationX(angle);
+
+    //ASSERT
+    checkMatrix(matrix,expected);
+})
+
+Deno.test("matrix multiply", () => {
+    //ARRANGE
+    const matrix1 = new Matrix4();
+    matrix1.setIdentity();
+    const matrix2 = new Matrix4();
+    matrix2.setIdentity();
+    const out = new Matrix4();
+    const IDENTITY = new Float32Array([
+        1,0,0,0,
+        0,1,0,0,
+        0,0,1,0,
+        0,0,0,1
+    ]);
+
+    //ACT
+    matrix1.multiply(out,matrix2);
+
+    //ASSERT
+    checkMatrix(out,IDENTITY);
+});
